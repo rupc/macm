@@ -1,0 +1,57 @@
+#!/bin/bash
+#알고리즘 문제 풀때 파일들 구조가 똑같고 같은 명령을 
+#반복하기 귀찮기 때문에 쉘 스크립트로 자동적을 만들어준다
+#echo $1
+prob_name=$1
+if [ -z "$prob_name" ]
+then
+    echo "문제 이름을 입력하세요"
+    exit 1
+fi
+
+echo "문제 이름 : $prob_name" 
+if [ -e "$prob_name" ]
+then
+    echo "이미 풀어봤거나 하다가 그만 둔 문제입니다."
+    echo "폴더가 이미 존재하니 그리로 들어가서 확인해보십시오"
+    exit 1
+fi
+
+mkdir "$prob_name"
+templatefolder="~/acm-template"
+no_temp=1
+if [ -z "$templatefolder" ]
+then
+    echo "템플릿 코드가 존재하지 않습니다"
+    echo "홈 폴더에 acm-template폴더를 생성 하시겠습니까?"
+    echo "템플릿 코드는 나중에 수정할 수 있습니다." 
+    echo "y/n?"
+    read yesno
+    if [ "$yesno" = y ]; then
+        mkdir "$templatefolder"
+        touch "$templatefolder"/templatesrc.cpp
+        cp "$templatefolder"/templatesrc.cpp "$prob_name"/
+    else 
+        no_temp=0
+    fi
+    
+fi
+
+if [ "$no_temp" = 0 ]
+then
+    touch /"$prob_name"/"$prob_name".cpp
+else
+    cp ~/acm-template/templatesrc.cpp ./"$prob_name"/
+fi
+
+mv ./"$prob_name"/templatesrc.cpp "$prob_name"/"$prob_name".cpp
+touch "$prob_name"/"$prob_name".in
+touch "$prob_name"/res
+
+echo -n "g++ -o $prob_name $prob_name" >> "$prob_name"/res
+echo ".cpp" >> "$prob_name"/res
+echo "chmod +x $prob_name" >> "$prob_name"/res
+echo "./$prob_name < $prob_name.in" >> "$prob_name"/res
+
+echo "만들기 성공!"
+exit 0
