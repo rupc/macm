@@ -9,7 +9,6 @@ then
     exit 1
 fi
 
-echo "문제 이름 : $prob_name" 
 if [ -e "$prob_name" ]
 then
     echo "이미 풀어봤거나 하다가 그만 둔 문제입니다."
@@ -44,14 +43,18 @@ else
     cp ~/acm-template/templatesrc.cpp ./"$prob_name"/
 fi
 
-mv ./"$prob_name"/templatesrc.cpp "$prob_name"/"$prob_name".cpp
-touch "$prob_name"/"$prob_name".in
-touch "$prob_name"/res
+CUR_DIR=$(pwd)
+mv "$CUR_DIR"/"$prob_name"/templatesrc.cpp "$CUR_DIR"/"$prob_name"/"$prob_name".cpp
+touch "$CUR_DIR"/"$prob_name"/"$prob_name".in
+touch "$CUR_DIR"/"$prob_name"/res
+touch "$CUR_DIR"/"$prob_name"/samples
+chmod +x $CUR_DIR/"$prob_name"/res
+echo -n "g++ -o ~/work/acm/bin/$prob_name $prob_name" >> "$CUR_DIR"/"$prob_name"/res
+# -g : gdb debbuing info
+# -pg : gprof profiling info
+echo ".cpp -std=c++14 -Wall -O2 -g -pg -DACMICPC -DDEBUG" >> "$CUR_DIR"/"$prob_name"/res
+echo "chmod +x $CUR_DIR"/"$prob_name" >> "$CUR_DIR"/"$prob_name"/res
+echo "$CUR_DIR/$prob_name < $prob_name.in" >> "$CUR_DIR"/"$prob_name"/res
 
-echo -n "g++ -o $prob_name $prob_name" >> "$prob_name"/res
-echo ".cpp" >> "$prob_name"/res
-echo "chmod +x $prob_name" >> "$prob_name"/res
-echo "./$prob_name < $prob_name.in" >> "$prob_name"/res
+echo Lets solve "$prob_name" && cd "$CUR_DIR"/"$prob_name"
 
-echo "만들기 성공!"
-exit 0
