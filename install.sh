@@ -2,7 +2,7 @@
 
 if [ -d ~/hbin ]; then
     #statements
-    if [ ! -f ~/hbin/macm ]; then
+    if [ -f ~/hbin/macm ]; then
         #statements
         echo "macm is already installed."
     fi
