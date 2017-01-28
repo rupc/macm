@@ -17,7 +17,6 @@ then
 fi
 
 mkdir "$prob"
-
 CUR_DIR=$(pwd)
 # code template generation section
 TEM_DIR="$CUR_DIR/code-templates"
@@ -42,7 +41,7 @@ fi
 
 # Create binary folder if it doesn't exist
 if [ ! -d $CUR_DIR/abin ]; then
-    echo "binary directory created"
+    echo "binary directory created" 
     mkdir $CUR_DIR/abin
 fi
 
@@ -51,6 +50,14 @@ touch "$CUR_DIR"/"$prob"/"$prob".in
 touch "$CUR_DIR"/"$prob"/res
 touch "$CUR_DIR"/"$prob"/samples
 chmod +x $CUR_DIR/"$prob"/res
+# default judge
+JUDGE="boj"
+echo -n "Your judge is" 
+if [ "$JUDGE" == "boj" ]; then
+    #statements
+    echo $JUDGE
+    curl -o $CUR_DIR/$prob/$prob.html https://www.acmicpc.net/problem/$prob
+fi
 
 # acm problem binary 
 executable="abin"
