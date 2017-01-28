@@ -1,60 +1,71 @@
 #!/bin/bash
 #알고리즘 문제 풀때 파일들 구조가 똑같고 같은 명령을 
 #반복하기 귀찮기 때문에 쉘 스크립트로 자동적을 만들어준다
-#echo $1
-prob_name=$1
-if [ -z "$prob_name" ]
+echo $1
+prob=$1
+if [ -z "$prob" ]
 then
-    echo "문제 이름을 입력하세요"
+    echo "Enter the name of problem(or number)"
+    echo "Usage : macm #PROBLEM_NUMBER"
     exit 1
 fi
 
-if [ -e "$prob_name" ]
+if [ -e "$prob" ]
 then
-    echo "이미 풀어봤거나 하다가 그만 둔 문제입니다."
-    echo "폴더가 이미 존재하니 그리로 들어가서 확인해보십시오"
+    echo "Same problem already exists."
     exit 1
 fi
 
-mkdir "$prob_name"
-templatefolder="~/acm-template"
-no_temp=1
-if [ -z "$templatefolder" ]
-then
-    echo "템플릿 코드가 존재하지 않습니다"
-    echo "홈 폴더에 acm-template폴더를 생성 하시겠습니까?"
-    echo "템플릿 코드는 나중에 수정할 수 있습니다." 
-    echo "y/n?"
-    read yesno
-    if [ "$yesno" = y ]; then
-        mkdir "$templatefolder"
-        touch "$templatefolder"/templatesrc.cpp
-        cp "$templatefolder"/templatesrc.cpp "$prob_name"/
-    else 
-        no_temp=0
-    fi
-    
-fi
-
-if [ "$no_temp" = 0 ]
-then
-    touch /"$prob_name"/"$prob_name".cpp
-else
-    cp ~/acm-template/templatesrc.cpp ./"$prob_name"/
-fi
+mkdir "$prob"
 
 CUR_DIR=$(pwd)
-mv "$CUR_DIR"/"$prob_name"/templatesrc.cpp "$CUR_DIR"/"$prob_name"/"$prob_name".cpp
-touch "$CUR_DIR"/"$prob_name"/"$prob_name".in
-touch "$CUR_DIR"/"$prob_name"/res
-touch "$CUR_DIR"/"$prob_name"/samples
-chmod +x $CUR_DIR/"$prob_name"/res
-echo -n "g++ -o ~/work/acm/bin/$prob_name $prob_name" >> "$CUR_DIR"/"$prob_name"/res
+# code template generation section
+TEM_DIR="$CUR_DIR/acm-template"
+no_temp=1
+if [ -z "$TEM_DIR" ]
+then
+    echo "Template code doesn't exist"
+    echo "Create file with empty content"
+    no_temp = 0;
+fi
+
+# Generate cpp source file
+if [ "$no_temp" = 0 ]
+then
+    touch "$prob"/"$prob".cpp
+else
+    # copy template code to the problem folder
+    cp $TEM_DIR/cpp-template.cpp ./"$prob"/
+    # Change the name of template source to problem.extension
+    mv "$CUR_DIR"/"$prob"/cpp-template.cpp "$CUR_DIR"/"$prob"/"$prob".cpp
+fi
+
+# Create binary folder if it doesn't exist
+if [ ! -d $CUR_DIR/abin ]; then
+    echo "binary directory created"
+    mkdir $CUR_DIR/abin
+fi
+
+# Generate input file, execute file and samples
+touch "$CUR_DIR"/"$prob"/"$prob".in
+touch "$CUR_DIR"/"$prob"/res
+touch "$CUR_DIR"/"$prob"/samples
+chmod +x $CUR_DIR/"$prob"/res
+
+executable="abin"
+extension=".cpp"
 # -g : gdb debbuing info
 # -pg : gprof profiling info
-echo ".cpp -std=c++14 -Wall -O2 -g -pg -DACMICPC -DDEBUG" >> "$CUR_DIR"/"$prob_name"/res
-echo "chmod +x $CUR_DIR"/"$prob_name" >> "$CUR_DIR"/"$prob_name"/res
-echo "$CUR_DIR/$prob_name < $prob_name.in" >> "$CUR_DIR"/"$prob_name"/res
+cflags="-std=c++14 -Wall -O2 -g -pg -DACMICPC -DDEBUG"
+cxx="g++"
+obj_loc=$CUR_DIR/abin/$prob
+target=$prob
+echo -n "g++ -o $CUR_DIR/abin/$prob $prob" >> "$CUR_DIR"/"$prob"/res
+echo "$extension $cflags" >> "$CUR_DIR"/"$prob"/res
+echo "chmod +x $CUR_DIR"/abin/"$prob" >> "$CUR_DIR"/"$prob"/res
+echo "$CUR_DIR/abin/$prob < $prob.in" >> "$CUR_DIR"/"$prob"/res
+#compile_cmd="g++ "
+#printf "$cxx -o $obj_loc $prob$extension $cflags"
 
-echo Lets solve "$prob_name" && cd "$CUR_DIR"/"$prob_name"
+echo Lets solve $prob && cd $CUR_DIR/$prob
 
