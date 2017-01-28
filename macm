@@ -7,13 +7,15 @@ if [ -z "$prob" ]
 then
     echo "Enter the name of problem(or number)"
     echo "Usage : macm #PROBLEM_NUMBER"
-    exit 1
+    kill -INT $$
+    #exit 1
 fi
 
 if [ -e "$prob" ]
 then
     echo "Same problem already exists."
-    exit 1
+    kill -INT $$
+    #exit 1
 fi
 
 mkdir "$prob"
