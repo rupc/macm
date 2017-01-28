@@ -20,7 +20,7 @@ mkdir "$prob"
 
 CUR_DIR=$(pwd)
 # code template generation section
-TEM_DIR="$CUR_DIR/acm-template"
+TEM_DIR="$CUR_DIR/code-template"
 no_temp=1
 if [ -z "$TEM_DIR" ]
 then
@@ -52,6 +52,7 @@ touch "$CUR_DIR"/"$prob"/res
 touch "$CUR_DIR"/"$prob"/samples
 chmod +x $CUR_DIR/"$prob"/res
 
+# acm problem binary 
 executable="abin"
 extension=".cpp"
 # -g : gdb debbuing info
