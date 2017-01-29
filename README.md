@@ -1,4 +1,4 @@
-# Make ACM problem folder script
-This bash script is written for creating folder conviniently which contains solution code and compiler command to solve algorithm related problem(e.g. acm, icpc)
+# Make ACM problem folder template script
+This bash script is written for easily creating folder which contains solution, input file, and compiler command to solve algorithmic problem(e.g. acm, icpc)
 
-Language assumed to C++ at now.
+Language assumed C++ 
